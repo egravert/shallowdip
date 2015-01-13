@@ -1,0 +1,117 @@
+A Shallow Dip into Go
+13 Jan 2014
+Tags: go beginner
+
+Eric Gravert
+Lead Software Engineer, Stitch Fix.
+egravert@stitchfix.com
+
+.image http://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png 300 _
+
+* Why use Go?
+
+- Concurrency
+- Tooling
+- Performance
+- Ease of Deployment
+
+* Concurrency
+
+- Goroutines - lightweight threading
+- Uses channels to simplify communication between goroutines
+
+* Tooling
+
+Go comes with a breadth of tooling to simplify development.
+
+Built-in support for:
+
+- building
+- testing & code coverage
+- downloading and installing packages
+- formatting code
+- profiling
+
+* Tooling - built-in commands
+   ☊ go help
+   Go is a tool for managing Go source code.
+
+   Usage:
+
+   go command [arguments]
+
+   The commands are:
+
+   build       compile packages and dependencies
+   clean       remove object files
+   env         print Go environment information
+   fix         run go tool fix on packages
+   fmt         run gofmt on package sources
+   generate    generate Go files by processing source
+   get         download and install packages and dependencies
+   install     compile and install packages and dependencies
+   list        list packages
+   run         compile and run Go program
+   test        test packages
+   tool        run specified go tool
+   version     print Go version
+   vet         run go tool vet on packages
+
+* Tooling - go build
+  go build <package>
+Compiles the specified packages
+
+- Uses GOPATH (more later) to resolve dependencies
+- Can compile a specific file
+- Has the ability to cross-compile code for multiple platforms
+- Supports tags to inject compile time strings into a binary
+
+* Tooling - go fmt
+- Formats code to a common standard. No more formatting wars!
+- Most editors have support for running it on save
+
+
+* Tooling - go fmt (Before)
+.code ugly.go /START OMIT/,/END OMIT/
+
+* Tooling - go fmt (After)
+.code formatted.go /START OMIT/,/END OMIT/
+
+* Tooling - go test
+
+Code to test (adder.go)
+
+.code tests/adder.go /START OMIT/,/END OMIT/
+
+Tests (adder_test.go)
+
+.code tests/adder_test.go /START OMIT/,/END OMIT/
+
+
+* Tooling - go tool cover
+  go get golang.org/x/tools/cmd/cover
+  go test -cover
+  go test -coverprofile=coverage.out
+  go tool cover -html=coverage.out
+
+* Tooling - go tool pprof
+
+
+now its own repo
+g
+
+* Demo Time!
+** Making an app concurrent
+
+* gitgrab
+.code single.go /START OMIT/,/END OMIT/
+
+
+
+
+
+* More Info
+
+** For an overview of performance
+
+[[http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast][Five things that make Go fast.]] - Dave Cheney
