@@ -6,31 +6,71 @@ Eric Gravert
 Lead Software Engineer, Stitch Fix.
 egravert@stitchfix.com
 
-.image http://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png 300 _
 
-* Why use Go?
+* Why choose Go?
 
 - Concurrency
-- Tooling
 - Performance
-- Ease of Deployment
+- Ease of deployment
+- Robust built-in tooling
 
 * Concurrency
 
-- Goroutines - lightweight threading
-- Uses channels to simplify communication between goroutines
+* Designed for Concurrent Programming
+
+- Bases its concurrency model off the ideas of CSP
+- Part of the language, not a package.
+- "Do not communicate by sharing memory. Instead, share memory by communicating."
+- A special mention, "Concurrency is not parallelism".
+
+* "go" keyword
+
+.play concurrent/goroutine.go /^func main/,/^}/ HLgoroutine
+
+- go keyword starts a goroutine, a lightweight thread that executes independent of the current thread of control
+- Can be a method, function, or anonymous function
+- When the function terminates, the goroutine terminates. Any return values are discarded.
+- Depending on implementation, goroutines may be multiplexed on one os thread
+
+* Channels
+
+.play concurrent/channels.go /^func main/,/^}/ HLchannel
+
+- provide a mechanism for concurrently executing functions to communicate by sending and receiving values
+- Can specify direction
+- Act as fifo queues
+- Sending and receving is synchronized
+
+* Performance
+
+* Go is fast(enough)
+
+- Performance is on-par with java and c
+- Improvements are still being made to the language to make it faster
+- Others have done a better job of doing this topic justice, see: 
+[[http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast][Five things that make Go fast.]] - Dave Cheney
+
+* Ease of deployment
+
+* Ease of deployment
+
+- No runtime to install
+- Statically linked binary
+- Build toolchain supports cross platform compilation
+- Assets can be compiled into the binary if needed
+.link https://github.com/jteeuwen/go-bindata go-bindata
 
 * Tooling
 
-Go comes with a breadth of tooling to simplify development.
+* Go comes with a breadth of tooling to simplify development.
 
 Built-in support for:
 
 - building
-- testing & code coverage
 - downloading and installing packages
 - formatting code
-- profiling
+- testing & code coverage
+- performance profiling
 
 * Tooling - built-in commands
    ☊ go help
@@ -62,56 +102,110 @@ Built-in support for:
 Compiles the specified packages
 
 - Uses GOPATH (more later) to resolve dependencies
-- Can compile a specific file
-- Has the ability to cross-compile code for multiple platforms
-- Supports tags to inject compile time strings into a binary
-
-* Tooling - go fmt
-- Formats code to a common standard. No more formatting wars!
-- Most editors have support for running it on save
-
-
-* Tooling - go fmt (Before)
-.code ugly.go /START OMIT/,/END OMIT/
-
-* Tooling - go fmt (After)
-.code formatted.go /START OMIT/,/END OMIT/
+- Can cross-compile applications for multiple platforms
+- Supports conditional compilation using tags
+- Can set app variables at compile time
 
 * Tooling - go test
 
-Code to test (adder.go)
+- All files with *_test.go are compiled, and can access any method in the package.
+- If a file declares a package with the _test suffix, it will be compiled and run but only has access to a package's exported functions.
+- All methods that have a "Test" prefix are run
+- Supports parallel testing
+- Test files can also include benchmarks and example. Examples will be included in documentation.
+- Supports conditional test runs
+- The preferred method of testing in Go is to use data-driven tests
+
+* Tooling - go test
+
+An example function to test
+
+Example Function:
 
 .code tests/adder.go /START OMIT/,/END OMIT/
 
-Tests (adder_test.go)
+* Tooling - go test
 
-.code tests/adder_test.go /START OMIT/,/END OMIT/
+Data-driven Test:
+
+.code tests/adder_test.go /START OMIT/,/END OMIT/ HLerror
+
+* Tooling - go test
+
+Test Results:
+
+  go test -v
+  === RUN TestAddSlice
+  --- FAIL: TestAddSlice (0.00s)
+  adder_test.go:21: Expected 5, got 6
+  adder_test.go:21: Expected 4, got 6
+  FAIL
+  exit status 1
+  FAIL    github.com/egravert/shallowdip/tests    0.003s
+
+* Tooling continued...
+- go get - Downloads and installs packages and their dependencies
+- go fmt - Formats code to a common standard. No more formatting wars!
+- go test -cover - Gives code coverage metrics for your code.
+  example:
+          go test -covermode=count -coverprofile=count.out fmt
+          go tool cover -html=count.out
+- go tool pprof - can be used to profile code performance
+- note: http/pprof can also be added to your package to add an http interface for heap, cpu, and blocking statistics
+
+* Writing Our First Program
+
+* Hello World
+
+.play first.go
 
 
-* Tooling - go tool cover
-  go get golang.org/x/tools/cmd/cover
-  go test -cover
-  go test -coverprofile=coverage.out
-  go tool cover -html=coverage.out
+* Package
 
-* Tooling - go tool pprof
+.code first.go HLpackage
 
+- Fundamental building block of go programs
+- No subpackages
+- Visibility is package level.
+- Pascal case names are public
+- "main" package defines an executable
 
-now its own repo
-g
+* Import
 
-* Demo Time!
-** Making an app concurrent
+.code -edit first.go HLimport
 
-* gitgrab
-.code single.go /START OMIT/,/END OMIT/
+- Provides access to the exported identifiers (functions, types, etc) of the package
+- No circular dependencies are allowed
+- A string indicating the location of the package.
+- stdlib packages are at the root
+- A package may be imported for side-effects
 
+* Main
 
+.code first.go HLmain
 
+- main.main() is the entry point of any go app
+- function declaration the same for methods, anonymous funcs, and closures
+- Pascal case names are exported
+- Args and return codes are accessed from the "os" package
+- os.Args, os.Exit()
 
+* Fmt
 
-* More Info
+.play first.go HLprintln
 
-** For an overview of performance
+- Accesses the imported package
+- fmt is NOT an object
+- UTF-8 source code support
+- Support for variadic functions
 
-[[http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast][Five things that make Go fast.]] - Dave Cheney
+* Further Reading
+
+- [[http://golang.org/doc][Go Docs]]
+- [[https://github.com/golang/go/wiki][Go github wiki]]
+- [[http://golangweekly.com/][Go (semi)weekly newsletter]]
+- [[http://dave.cheney.net/category/golang][Dave Cheney's Blog (check out the resources page]]
+- [[https://gobyexample.com/][Go by Example]]
+- [[http://blog.gopheracademy.com/][Gopher Academy]]
+- [[http://www.golangbootcamp.com/book][Go Bootcamp - online book]]
+- [[http://gophervids.appspot.com/][GopherVids]]

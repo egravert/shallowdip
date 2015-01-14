@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,6 +11,8 @@ import (
 )
 
 type RepoAction func(string)
+
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
 // START OMIT
 func main() {
