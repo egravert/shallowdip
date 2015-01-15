@@ -18,8 +18,11 @@ egravert@stitchfix.com
 
 * Designed for Concurrent Programming
 
-- Bases its concurrency model off the ideas of CSP
-- Part of the language, not a package.
+- Ideas from languages inspired by Tony Hoare's, Communicating Sequential Processes(CSP)
+- Concurrency primatives are a part of the language, not a package.
+  - light-weight processes ("goroutines")
+  - channels for communication and synchronization
+  - "select", for working with a set of send and receive channels. Similar to a "switch" statement.
 - "Do not communicate by sharing memory. Instead, share memory by communicating."
 - A special mention, "Concurrency is not parallelism".
 
@@ -36,7 +39,7 @@ egravert@stitchfix.com
 
 .play concurrent/channels.go /^func main/,/^}/ HLchannel
 
-- provide a mechanism for concurrently executing functions to communicate by sending and receiving values
+- Provide a mechanism for concurrently executing functions to communicate by sending and receiving values
 - Can specify direction
 - Act as fifo queues
 - Sending and receving is synchronized
@@ -66,11 +69,11 @@ egravert@stitchfix.com
 
 Built-in support for:
 
-- building
-- downloading and installing packages
-- formatting code
-- testing & code coverage
-- performance profiling
+- Building
+- Downloading and installing packages
+- Formatting code
+- Testing & code coverage
+- Performance profiling
 
 * Tooling - built-in commands
    ☊ go help
@@ -101,10 +104,9 @@ Built-in support for:
   go build <package>
 Compiles the specified packages
 
-- Uses GOPATH (more later) to resolve dependencies
 - Can cross-compile applications for multiple platforms
 - Supports conditional compilation using tags
-- Can set app variables at compile time
+- Can set app variables at compile time (useful for adding things like version, or git rev.)
 
 * Tooling - go test
 
@@ -196,8 +198,15 @@ Test Results:
 
 - Accesses the imported package
 - fmt is NOT an object
-- UTF-8 source code support
+- Strings are read-only slices of bytes.
+- Source code is defined to be UTF-8 and strings may contain unicode characters
 - Support for variadic functions
+
+* Potential Use Cases
+
+- Background jobs - Pete and I are looking at converting trigger metrics to small go apps
+- Services - A sweet spot for the language. Go has a robust, concurrent http package as part of the stdlib
+- JS application backends - Similar to services, once an app is launched, Go can handle the API calls.
 
 * Further Reading
 
